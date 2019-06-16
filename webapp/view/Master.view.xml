@@ -28,8 +28,8 @@
 			</List>
 		</semantic:content>
 		<!-- This is the original code of SAP WebIDE for sorting and Grouping -->
-		<!--
-		<semantic:sort>
+	 
+		<!-- <semantic:sort>
 			<semantic:SortSelect id="sort" selectedKey="{masterView>/sortBy}" change="onSort">
 				<core:Item id="masterSort1" key="CategoryName" text="{i18n>masterSort1}"/>
 				<core:Item id="masterSort2" key="CategoryID" text="{i18n>masterSort2}"/>
@@ -43,6 +43,6 @@
 				<core:Item id="masterGroupNone" key="None" text="{i18n>masterGroupNone}"/>
 				<core:Item id="masterGroup1" key="CategoryID" text="{i18n>masterGroup1}"/>
 			</semantic:GroupSelect>
-		</semantic:group>-->
+		</semantic:group>   -->
 	</semantic:MasterPage>
 </mvc:View>

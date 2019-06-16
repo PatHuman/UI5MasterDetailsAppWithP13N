@@ -27,6 +27,8 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit: function () {
+
+			
 			// Control state model
 			var oList = this.byId("list"),
 				oViewModel = this._createViewModel(),
@@ -34,6 +36,7 @@ sap.ui.define([
 				// so it can be restored later on. Busy handling on the master list is
 				// taken care of by the master list itself.
 				iOriginalBusyDelay = oList.getBusyIndicatorDelay();
+				console.log(iOriginalBusyDelay)
 
 			this._oGroupSortState = new GroupSortState(oViewModel, grouper.groupUnitNumber(this.getResourceBundle()));
 
@@ -48,10 +51,13 @@ sap.ui.define([
 			// Make sure, busy indication is showing immediately so there is no
 			// break after the busy indication for loading the view's meta data is
 			// ended (see promise 'oWhenMetadataIsLoaded' in AppController)
-			oList.attachEventOnce("updateFinished", function (oEvent) {
+			// oList.attachEventOnce("updateFinished", function (oEvent) {
+				oList.attachEventOnce("updateStarted", function (oEvent) {
 				// Restore original busy indicator delay for the list
-				oViewModel.setProperty("/delay", iOriginalBusyDelay);
 				this.initP13N(oEvent.getSource());
+				oViewModel.setProperty("/delay", iOriginalBusyDelay);
+				// this._oGroupSortState.
+				
 			}.bind(this));
 
 			this.getView().addEventDelegate({
@@ -67,6 +73,15 @@ sap.ui.define([
 		/* =========================================================== */
 		/* event handlers                                              */
 		/* =========================================================== */
+
+		onTest: function(){
+			var aSorters =  this._oGroupSortState.group('CategoryID');
+			// this.initP13N
+			// this._applyGroupSort(aSorters);
+			this._oList.getBinding("items").sort(aSorters)
+			// this._oListManager.group
+			console.log("yup yup!")
+		},
 		initP13N: function (oList) {
 			this._oP13nManagerSettings = {
 				oListener: this,
@@ -110,9 +125,42 @@ sap.ui.define([
 					sColumnKey: "CategoryName",
 					sOperation: "Ascending"
 				}],
-				aGroup: []
+				aGroup: [
+					// { // https://sapui5.hana.ondemand.com/1.38.16/#docs/api/symbols/sap.m.P13nGroupItem.html#constructor
+					// 	sColumnKey: "CategoryID",
+					// 	sOperation: "Ascending",
+					// 	bShowIfGrouped: true
+					// }
+				]
 			};
 			var oListManager = new ListManager(this.getOwnerComponent(), this._oList, this.byId("__button_P13N"), this._oP13nManagerSettings);
+			// console.log(oListManager.getDialogObj())
+			// oListManager.setDefaultGrouping( )
+			// this._oList.getBinding("items").group("CategoryID")
+
+			// oListManager.group(this._oGroupSortState.group('CategoryID'))
+			
+		
+		},
+		
+		onAfterRendering:function(oEvent){
+			var aSorters =  this._oGroupSortState.group('CategoryID');
+			// this.initP13N.aGroup.push(
+				// { // https://sapui5.hana.ondemand.com/1.38.16/#docs/api/symbols/sap.m.P13nGroupItem.html#constructor
+				// 	sColumnKey: "CategoryID",
+				// 	sOperation: "Ascending",
+				// 	bShowIfGrouped: true
+				// }
+			// )
+			// this._applyGroupSort(aSorters);
+			// this._oList.getBinding("items").aSorters = aSorters
+			// this._oList.getBinding("items").sort();
+			// this._oListManager.group
+			// console.log("yup yup!",this._oList.getBinding("items"))
+			
+			// console.log(this.initP13N)
+			// console.log(this._oListManager)
+		
 		},
 		/**
 		 * After list data is available, this handler method updates the
@@ -126,6 +174,10 @@ sap.ui.define([
 			this._updateListItemCount(oEvent.getParameter("total"));
 			// hide pull to refresh if necessary
 			this.byId("pullToRefresh").hide();
+			// var aSorters =  this._oGroupSortState.group('CategoryID');
+			// this._oList.getBinding("items").sort(aSorters)
+
+			
 		},
 
 		/**
@@ -186,7 +238,7 @@ sap.ui.define([
 		onGroup: function (oEvent) {
 			var sKey = oEvent.getSource().getSelectedItem().getKey(),
 				aSorters = this._oGroupSortState.group(sKey);
-
+				console.log(sKey)
 			this._applyGroupSort(aSorters);
 		},
 
@@ -220,6 +272,7 @@ sap.ui.define([
 			var aFilterItems = oEvent.getParameters().filterItems,
 				aFilters = [],
 				aCaptions = [];
+			console.log('hererere')
 
 			// update filter state:
 			// combine the filter array and the filter string
@@ -237,6 +290,7 @@ sap.ui.define([
 				aCaptions.push(oItem.getText());
 			});
 
+			
 			this._oListFilterState.aFilter = aFilters;
 			this._updateFilterBar(aCaptions.join(", "));
 			this._applyFilterSearch();

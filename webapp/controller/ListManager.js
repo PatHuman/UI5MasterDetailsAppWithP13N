@@ -5,8 +5,9 @@
 */
 sap.ui.define([
 	"sap/ui/base/Object",
+	"sap/ui/model/Sorter",
 	"mjzsoft/sapui5/tutorial/controller/P13nManager"
-], function(BaseObject, P13nManager) {
+], function(BaseObject, Sorter,P13nManager) {
 	"use strict";
 	return BaseObject.extend("mjzsoft.sapui5.tutorial.controller.ListManager", {
 		/*_oP13nManagerSettings: {
@@ -61,6 +62,53 @@ sap.ui.define([
 			this._initP13nDialog();
 			oP13NBtn.attachPress(this._openP13nDialog, this);
 		},
+		getDialogObj: function(){
+			return this._oP13nDialog;
+		},
+		setDefaultGrouping: function(){
+
+			// console.log(this._oP13nModel.getProperty("/GroupItems"))
+			// // var aP13nFilter = this._oP13nDialog.getFilter();
+			// var panelGroup = this._oP13nDialog._createP13nGroupPanel();
+			// var aP13nGroup = this._oP13nDialog.getGroup();
+
+			var aGroupItems = this._oP13nModel.getProperty("/GroupItems"),
+			aP13nGroup = [];
+			for (var i = 0; i < aGroupItems.length; i++) {
+				// var aCustomData = aGroupItems[i].getCustomData(),
+				// 	vGroup = true;
+				// if (aCustomData.length > 0) {
+				// 	if (aCustomData[0].getKey() === "fnVGroup") {
+				// 		vGroup = aCustomData[0].getValue();
+				// 	}
+				// }
+				var vGroup = aGroupItems[i].fnVGroup,
+				columnKey = aGroupItems[i].sColumnKey;
+
+				// console.log(aGroupItems[i])
+				aP13nGroup.push(new Sorter(columnKey, false, vGroup));
+			}
+
+			// console.log(sorter.aKeys,aP13nGroup,panelGroup)
+			// // var aFilters = [];
+
+			// var aSorter = [];
+			// if (aP13nGroup) {
+			// 	for (var iGroupIndex = 0; iGroupIndex < aP13nGroup.length; ++iGroupIndex) {
+			// 		aSorter.push(aP13nGroup[iGroupIndex]);
+			// 	}
+			// }
+		 
+			// this._oListFilterState.aFilters = aFilters;
+			// this._oListFilterState.aSorter = aSorter;
+			this._oListFilterState.aSorter = aP13nGroup[0];
+
+			this._applyGroupSort();
+
+			// this._applyFilterSearch();
+			console.log("yuopman...#")
+
+		},
 		_initP13NModel: function() {
 			if (this._oP13nManagerSettings) {
 				var aNoneItem = [];
@@ -84,6 +132,7 @@ sap.ui.define([
 					Group: this._oP13nManagerSettings.aGroup
 				});
 				this._oOwnerComponent.setModel(this._oP13nModel, this._sP13nModel);
+				this.setDefaultGrouping()
 			}
 		},
 		_initP13nDialog: function() {
@@ -145,6 +194,7 @@ sap.ui.define([
 			this._oListFilterState.aSorter = aSorter;
 			this._applyGroupSort();
 			this._applyFilterSearch();
+			// console.log("yuopman...")
 		},
 		_openP13nDialog: function() {
 			if (this._oP13nDialog) {
@@ -164,6 +214,7 @@ sap.ui.define([
 		},
 		_applyGroupSort: function() {
 			var aSorters = this._oListFilterState.aSorter;
+			console.log(aSorters)
 			this._oList.getBinding("items").sort(aSorters);
 		}
 	});

@@ -7,7 +7,7 @@
 			<IconTabBar id="iconTabBar" class="sapUiResponsiveContentPadding">
 				<items>
 					<IconTabFilter id="iconTabBarFilter1" icon="sap-icon://hint" tooltip="{i18n>detailIconTabBarInfo}"></IconTabFilter>
-					<IconTabFilter id="iconTabBarFilter2" icon="sap-icon://attachment" tooltip="{i18n>detailIconTabBarAttachments}"></IconTabFilter>
+					<IconTabFilter id="iconTabBarFilter2" icon="sap-icon://attachment" tooltip="{i18n>detailIconTabBarAttachments}" ></IconTabFilter>
 				</items>
 			</IconTabBar>
 			<Table id="lineItemsList" width="auto" items="{Products}" updateFinished="onListUpdateFinished"
